@@ -21,10 +21,11 @@
 # brief:	makefile for libqueue.so
 #-------------------------------------------------------------------------------
 libqueue.so: queue_asm.o queue.o
-	gcc -z noexecstack -g -shared queue_asm.o queue.o -o libqueue.so
+	gcc -march=x86-64 -m64 -z noexecstack -shared queue_asm.o queue.o -o libqueue.so
 queue.o: queue.c
-	gcc -g -fPIC -c queue.c -o queue.o
+	gcc -march=x86-64 -m64 -fPIC -c queue.c -o queue.o
 queue_asm.o: queue.asm
-	nasm -g -f elf64 queue.asm -o queue_asm.o
+	nasm -f elf64 queue.asm -o queue_asm.o
+.PHONY: clean
 clean:
 	rm -f libqueue.so queue.o queue_asm.o

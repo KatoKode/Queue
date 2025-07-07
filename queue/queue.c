@@ -17,17 +17,10 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ------------------------------------------------------------------------------*/
 #include "queue.h"
-/*------------------------------------------------------------------------------
-  file:    btree.h
-  author:  J. McIntosh
-  brief:   Queue implementation
-------------------------------------------------------------------------------*/
 //------------------------------------------------------------------------------
 // Function that is called when the library is loaded.
-void __attribute__ ((constructor)) initLibrary(void) {
-}
+void __attribute__ ((constructor)) initQueueLibrary(void) {}
 //------------------------------------------------------------------------------
 // Function that is called when the library is closed.
-void __attribute__ ((destructor)) termLibrary(void) {
-}
+void __attribute__ ((destructor)) termQueueLibrary(void) {}
 

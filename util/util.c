@@ -17,18 +17,10 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ------------------------------------------------------------------------------*/
 #include "util.h"
-/*------------------------------------------------------------------------------
-  file:   list.inc
-  author: J.McIntosh
-  brief:  utilities shared-library
-------------------------------------------------------------------------------*/
-
 //------------------------------------------------------------------------------
-// initLIBRARY
-void __attribute__ ((constructor)) initLibrary(void) {
-}
+// initUtilLibrary
+void __attribute__ ((constructor)) initUtilLibrary(void) {}
 //------------------------------------------------------------------------------
-// termLIBRARY
-void __attribute__ ((destructor)) termLibrary(void) {
-}
+// termUtilLibrary
+void __attribute__ ((destructor)) termUtilLibrary(void) {}
 

@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
-    Assembly Language Implementation of a B-Tree
+    Queue Implementation in x86_64 Assembly Language with C Interface
     Copyright (C) 2025  J. McIntosh
 
     This program is free software; you can redistribute it and/or modify
@@ -18,11 +18,7 @@
 ------------------------------------------------------------------------------*/
 #ifndef UTIL_H
 #define UTIL_H
-/*------------------------------------------------------------------------------
-  file:   util.h
-  author: J.McIntosh
-  brief:  utilities shared-library
-------------------------------------------------------------------------------*/
+
 #include <unistd.h>
 #include <stdint.h>
 

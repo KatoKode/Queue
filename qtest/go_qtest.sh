@@ -17,12 +17,19 @@
 #   with this program; if not, write to the Free Software Foundation, Inc.,
 #   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #-------------------------------------------------------------------------------
-# file:   go_btest.sh
+# file:   go_qtest.sh
 # author: J. McIntosh
-# brief:  run script for B-Tree demo program
+# brief:  run script for Queue demo program
 #-------------------------------------------------------------------------------
 #
+echo -e "\nRunning ./qtest"
 rnd=`shuf -i 10000000-99999999 -n 1`
-./qtest "${rnd}"
-
+./qtest "${rnd}" > ./out.txt
+echo -e "\nOutput in file ./out.txt\n"
+read -p "View file ./out.txt (y, n): " YN
+case $YN in
+  'y'|'Y') less ./out.txt ;;
+  'n'|'N') echo -e "\nExiting\n" ;;
+  *) ;;
+esac
 

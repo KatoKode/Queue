@@ -16,10 +16,6 @@
 #   with this program; if not, write to the Free Software Foundation, Inc.,
 #   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #-------------------------------------------------------------------------------
-# file: 	makefile
-# author: J. McIntosh
-# brief:	makefile for libqueue.so
-#-------------------------------------------------------------------------------
 libqueue.so: queue_asm.o queue.o
 	gcc -march=x86-64 -m64 -z noexecstack -shared queue_asm.o queue.o -o libqueue.so
 queue.o: queue.c

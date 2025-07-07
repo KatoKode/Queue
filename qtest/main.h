@@ -21,11 +21,6 @@
 #include <stdio.h>
 #include "../queue/queue.h"
 #include "../util/util.h"
-/*------------------------------------------------------------------------------
-  file:    main.h
-  author:  J. McIntosh
-  brief:   Queue demo program
-------------------------------------------------------------------------------*/
 
 // defines you can modify
 #define DATA_COUNT    28

@@ -16,10 +16,6 @@
 #   with this program; if not, write to the Free Software Foundation, Inc.,
 #   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #-------------------------------------------------------------------------------
-# file:   makefile
-# author: J. McIntosh
-# brief:  Queue demo program
-#-------------------------------------------------------------------------------
 qtest: main.o ../queue/libqueue.so ../util/libutil.so
 	gcc -march=x86-64 -m64 -z noexecstack main.o ../queue/libqueue.so ../util/libutil.so -o qtest
 main.o: main.c

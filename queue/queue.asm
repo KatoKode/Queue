@@ -346,6 +346,10 @@ queue_init:
       add       rax, ALIGN_SIZE
       dec       rax
       and       rax, ALIGN_MASK
+      test      rax, rax  ; test for 0 and adjust up to 8
+      jnz       .not_zero
+      mov       rax, QWORD ALIGN_SIZE
+.not_zero:
       mov       QWORD [rdi + queue.s_size], rax
 ; buffer_size = queue->s_size * obj_count;
       mul       rsi

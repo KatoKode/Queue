@@ -31,9 +31,9 @@ sh ./queue_make.sh
 ---
 
 # RUN QUEUE DEMO
-In the `qtest` folder enter the following command:
+In the `demo` folder enter the following command:
 ```bash
-./go_qtest.sh
+./go_demo.sh
 ```
 
 ---

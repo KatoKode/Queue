@@ -1,27 +1,31 @@
 #-------------------------------------------------------------------------------
-#   Queue (QUEUE) Implementation in x86_64 Assembly Language with C interface
-#
+#   Queue Implementation in x86_64 Assembly Language with C interface
 #   Copyright (C) 2025  J. McIntosh
 #
-#   QUEUE is free software; you can redistribute it and/or modify
+#   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
 #   (at your option) any later version.
 #
-#   QUEUE is distributed in the hope that it will be useful,
+#   This program is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 #
 #   You should have received a copy of the GNU General Public License along
-#   with QUEUE; if not, write to the Free Software Foundation, Inc.,
+#   with this program; if not, write to the Free Software Foundation, Inc.,
 #   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #-------------------------------------------------------------------------------
-demo: main.o ../queue/libqueue.so ../util/libutil.so
-	gcc -march=x86-64 -m64 -z noexecstack main.o ../queue/libqueue.so \
-		../util/libutil.so -o demo
-main.o: main.c
-	gcc -march=x86-64 -m64 -Wall -c main.c -pthread -o main.o
-.PHONY: clean
-clean:
-	rm -f demo main.o
+# !/bin/sh
+#
+echo -e "\nRunning ./demo"
+rnd=`shuf -i 10000000-99999999 -n 1`
+./demo "${rnd}" > ./out.txt
+echo -e "\nOutput in file ./out.txt\n"
+read -r -p "View file ./out.txt [Y/n] " YN
+case ${YN:-Y} in
+  'y'|'Y') less ./out.txt ;;
+  'n'|'N') echo -e "\nExiting\n" ;;
+  *) ;;
+esac
+

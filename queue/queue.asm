@@ -28,7 +28,8 @@ extern printf
 ;
 NULL          EQU     0
 ALIGN_SIZE    EQU     8
-ALIGN_MASK    EQU     ~(ALIGN_SIZE - 1)
+ALIGN_WITH    EQU     (ALIGN_SIZE - 1)
+ALIGN_MASK    EQU     ~(ALIGN_WITH)
 ;
 ;-------------------------------------------------------------------------------
 ;
@@ -48,15 +49,6 @@ ALIGN_MASK    EQU     ~(ALIGN_SIZE - 1)
 ;-------------------------------------------------------------------------------
 ;
 %include "queue.inc"
-;
-section .data
-      hdr01       db      "queue_deque",0
-      hdr02       db      "queue_empty",0
-      hdr03       db      "queue_enque",0
-      hdr04       db      "queue_full",0
-      hdr05       db      "queue_init",0
-      hdr06       db      "queue_term",0
-      fmt         db      "---| %s |---",10,0
 ;
 section .text
 ;
@@ -85,22 +77,9 @@ queue_deque:
 ; prologue
       push      rbp
       mov       rbp, rsp
-      sub       rsp, 16
-; QWORD [rbp - 8] = rdi (queue)
+      sub       rsp, 24
       mov       QWORD [rbp - 8], rdi
-; QWORD [rbp - 16] = rsi (object)
       mov       QWORD [rbp - 16], rsi
-; BEGIN PRINTF
-; printf(fmt, hdr01);
-      push      r12
-      xor       rax, rax
-      mov       rdi, fmt
-      mov       rsi, hdr01
-      ALIGN_STACK_AND_CALL r12, printf, wrt, ..plt
-      mov       rdi, QWORD [rbp - 8]
-      mov       rsi, QWORD [rbp - 16]
-      pop       r12
-; END PRINTF
 ; if (queue->head == NULL) return -1;
       mov       eax, -1
       mov       rcx, QWORD [rdi + queue.head]
@@ -157,17 +136,6 @@ queue_deque:
 ;
       global queue_empty:function
 queue_empty:
-; BEGIN PRINTF
-; printf(fmt, hdr02);
-      push      r12
-      push      rdi
-      xor       rax, rax
-      mov       rdi, fmt
-      mov       rsi, hdr02
-      ALIGN_STACK_AND_CALL r12, printf, wrt, ..plt
-      pop       rdi
-      pop       r12
-; END PRINTF
 ; if (queue->tail == NULL) return 1;
       mov       eax, 1
       mov       rcx, QWORD [rdi + queue.tail]
@@ -202,20 +170,7 @@ queue_enque:
       push      rbp
       mov       rbp, rsp
       sub       rsp, 8
-; QWORD [rbp - 8] = rdi (queue)
       mov       QWORD [rbp - 8], rdi
-; BEGIN PRINTF
-; printf(fmt, hdr03);
-      push      r12
-      push      rsi
-      xor       rax, rax
-      mov       rdi, fmt
-      mov       rsi, hdr03
-      ALIGN_STACK_AND_CALL r12, printf, wrt, ..plt
-      pop       rsi
-      pop       r12
-      mov       rdi, QWORD [rbp - 8]
-; END PRINTF
 ; if (queue->head == queue->tail) {
       mov       rcx, QWORD [rdi + queue.head]
       mov       rdx, QWORD [rdi + queue.tail]
@@ -273,17 +228,6 @@ queue_enque:
 ;
       global queue_full:function
 queue_full:
-; BEGIN PRINTF
-; printf(fmt, hdr04);
-      push      r12
-      push      rdi
-      xor       rax, rax
-      mov       rdi, fmt
-      mov       rsi, hdr04
-      ALIGN_STACK_AND_CALL r12, printf, wrt, ..plt
-      pop       rdi
-      pop       r12
-; END PRINTF
 ; if ((queue->head != NULL) && (queue->head == queue->tail)) return 1
       mov       eax, 1
       mov       rcx, QWORD [rdi + queue.head]
@@ -316,6 +260,7 @@ queue_full:
 ;
 ;   QWORD [rbp - 8]   = rdi (queue)
 ;   QWORD [rbp - 16]  = buffer_size
+;   QWORD [rbp - 24]  = rbx (callee saved)
 ;-------------------------------------------------------------------------------
 ;
       global queue_init:function
@@ -323,23 +268,9 @@ queue_init:
 ; prologue
       push      rbp
       mov       rbp, rsp
-      sub       rsp, 16
-; QWORD [rbp - 8] = rdi (queue)
+      sub       rsp, 24
       mov       QWORD [rbp - 8], rdi
-; BEGIN PRINTF
-; printf(fmt, hdr05);
-      push      r12
-      push      rsi
-      push      rdx
-      xor       rax, rax
-      mov       rdi, fmt
-      mov       rsi, hdr05
-      ALIGN_STACK_AND_CALL r12, printf, wrt, ..plt
-      pop       rdx
-      pop       rsi
-      pop       r12
-      mov       rdi, QWORD [rbp - 8]
-; END PRINTF
+      mov       QWORD [rbp - 24], rbx
 ; queue->o_size = obj_size;
       mov       QWORD [rdi + queue.o_size], rdx
 ; queue->s_size = (obj_size + ALIGN_SIZE - 1) & ALIGN_MASK;
@@ -358,7 +289,7 @@ queue_init:
 ; if ((queue->buffer = calloc(1, buffer_size)) == NULL) return -1;
       mov       rdi, 1
       mov       rsi, rax
-      call      calloc wrt ..plt
+      ALIGN_STACK_AND_CALL rbx, calloc, wrt, ..plt
       mov       rdi, QWORD [rbp - 8]
       mov       QWORD [rdi + queue.buffer], rax
       test      rax, rax
@@ -377,6 +308,7 @@ queue_init:
       mov       QWORD [rdi + queue.bufend], rax
       xor       eax, eax
 .epilogue:
+      mov       rbx, QWORD [rbp - 24]
       mov       rsp, rbp
       pop       rbp
       ret
@@ -393,6 +325,7 @@ queue_init:
 ; stack:
 ;
 ;   QWORD [rbp - 8] = rdi (queue}
+;   QWORD [rbp - 16]  = rbx (callee saved)
 ;-------------------------------------------------------------------------------
 ;
       global queue_term:function
@@ -400,35 +333,26 @@ queue_term:
 ; prologue
       push      rbp
       mov       rbp, rsp
-      sub       rsp, 8
-; QWORD [rbp - 8] = rdi (queue}
+      sub       rsp, 24
       mov       QWORD [rbp - 8], rdi
-; BEGIN PRINTF
-; printf(fmt, hdr06);
-      push      r12
-      xor       rax, rax
-      mov       rdi, fmt
-      mov       rsi, hdr06
-      ALIGN_STACK_AND_CALL r12, printf, wrt, ..plt
-      pop       r12
-      mov       rdi, QWORD [rbp - 8]
-; END PRINTF
+      mov       QWORD [rbp - 16], rbx
 ; buffer_size = queue->bufend - queue->buffer;
       mov       rcx, QWORD [rdi + queue.buffer]
       mov       rax, QWORD [rdi + queue.bufend]
       sub       rax, rcx
       mov       rdi, rcx
       mov       rsi, rax
-      call      bzero wrt ..plt
+      ALIGN_STACK_AND_CALL rbx, bzero, wrt, ..plt
 ; free item queue memory
       mov       rdi, QWORD [rbp - 8]
       mov       rdi, QWORD [rdi + queue.buffer]
-      call      free wrt ..plt
+      ALIGN_STACK_AND_CALL rbx, free, wrt, ..plt
 ; zero out queue structure
       mov       rdi, QWORD [rbp - 8]
       mov       rsi, QWORD queueSize
-      call      bzero wrt ..plt
+      ALIGN_STACK_AND_CALL rbx, bzero, wrt, ..plt
 ; epilogue
+      mov       rbx, QWORD [rbp - 16]
       mov       rsp, rbp
       pop       rbp
       ret

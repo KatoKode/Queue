@@ -5,7 +5,7 @@ Just Another Armchair Programmer
 
 Queue Implementation in x86_64 Assembly Language with C interface
 
-by Jerry McIntosh
+by JD McIntosh
 
 ---
 

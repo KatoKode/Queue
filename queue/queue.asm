@@ -77,7 +77,7 @@ queue_deque:
 ; prologue
       push      rbp
       mov       rbp, rsp
-      sub       rsp, 24
+      sub       rsp, 32
       mov       QWORD [rbp - 8], rdi
       mov       QWORD [rbp - 16], rsi
 ; if (queue->head == NULL) return -1;
@@ -169,7 +169,7 @@ queue_enque:
 ; prologue
       push      rbp
       mov       rbp, rsp
-      sub       rsp, 8
+      sub       rsp, 16
       mov       QWORD [rbp - 8], rdi
 ; if (queue->head == queue->tail) {
       mov       rcx, QWORD [rdi + queue.head]
@@ -268,7 +268,7 @@ queue_init:
 ; prologue
       push      rbp
       mov       rbp, rsp
-      sub       rsp, 24
+      sub       rsp, 32
       mov       QWORD [rbp - 8], rdi
       mov       QWORD [rbp - 24], rbx
 ; queue->o_size = obj_size;
@@ -333,7 +333,7 @@ queue_term:
 ; prologue
       push      rbp
       mov       rbp, rsp
-      sub       rsp, 24
+      sub       rsp, 32
       mov       QWORD [rbp - 8], rdi
       mov       QWORD [rbp - 16], rbx
 ; buffer_size = queue->bufend - queue->buffer;
